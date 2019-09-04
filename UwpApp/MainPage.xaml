@@ -5,10 +5,24 @@
     xmlns:local="using:UwpApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:xaml="using:Microsoft.Graphics.Canvas.UI.Xaml"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <TextBlock x:Name="TheTextBlock" Text="HAHA" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Text="Reactive VM binding" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock x:Name="TheTextBlock" Grid.Row="1" Text="HAHA" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="2" Text="Win2D" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <xaml:CanvasControl Grid.RowSpan="4" Grid.Column="1" Draw="canvasControl_Draw" ClearColor="CornflowerBlue" VisibilityMode="ForceVisible" />
     </Grid>
 </Page>

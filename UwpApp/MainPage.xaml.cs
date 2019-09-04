@@ -1,36 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+using Windows.UI;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.Graphics.Canvas.UI.Xaml;
 using ReactiveUI;
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace UwpApp
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Page, IViewFor<MainPageViewModel>
     {
-        private IDisposable _bindTo;
 
         public MainPage()
         {
             this.InitializeComponent();
 
-            _bindTo = Observable.Interval(TimeSpan.FromSeconds(1)).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, page => page.TheTextBlock.Text);
+            this.OneWayBind(ViewModel, vm => vm.Dummy, v => v.TheTextBlock.Text);
+
+            ViewModel = new MainPageViewModel();
+
+        }
+
+        object IViewFor.ViewModel
+        {
+            get => ViewModel;
+            set => ViewModel = (MainPageViewModel) value;
+        }
+
+        public MainPageViewModel ViewModel { get; set; }
+
+        private void canvasControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+        {
+            args.DrawingSession.DrawEllipse(155, 115, 80, 30, Colors.GreenYellow, 3);
+            args.DrawingSession.DrawText("Hello, world!", 100, 100, Colors.Yellow);
+        }
+    }
+
+    public class MainPageViewModel : ReactiveObject
+    {
+        private string _dummy = "";
+
+        public MainPageViewModel()
+        {
+            Observable.Interval(TimeSpan.FromSeconds(1)).Select(l => l.ToString()).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, page => page.Dummy);
+
+        }
+
+        public string Dummy
+        {
+            get => _dummy;
+            set => this.RaiseAndSetIfChanged(ref _dummy, value);
         }
     }
 }
